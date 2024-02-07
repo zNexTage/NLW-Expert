@@ -12,7 +12,7 @@ public class RocketseatAuctionDbContext : DbContext
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
-        optionsBuilder.UseSqlite("Data Source=RockeseatAuction.db");
+        optionsBuilder.UseSqlite("Data Source=D:\\MeusProjetos\\RocketseatAuction\\leilaoDbNLW.db");
     }
 
     public DbSet<Auction> Auctions { get; set; }
