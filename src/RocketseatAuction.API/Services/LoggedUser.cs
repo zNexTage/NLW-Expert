@@ -1,27 +1,29 @@
 using System.Text;
+using RocketseatAuction.API.Contracts;
 using RocketseatAuction.API.Entities;
 using RocketseatAuction.API.Repositories;
 
 namespace RocketseatAuction.API.Services;
 
-public class LoggedUser
+public class LoggedUser : ILoggedUser
 {
     private readonly IHttpContextAccessor _httpContextAccessor;
+    private readonly IUserRepository _repo;
     
-    public LoggedUser(IHttpContextAccessor httpContextAccessor)
+    public LoggedUser(IHttpContextAccessor httpContextAccessor, IUserRepository userRepository)
     {
         _httpContextAccessor = httpContextAccessor;
+        _repo = userRepository;
     }
     
     public User User()
     {
-        var repo = new RocketseatAuctionDbContext();
 
         var token = TokenOnRequest();
 
         var email = FromBase64String(token);
 
-        return repo.Users.First(user => user.Email == email);
+        return _repo.GetByEmail(email);
     }
     
     private string TokenOnRequest()

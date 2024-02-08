@@ -1,6 +1,11 @@
+using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
+using RocketseatAuction.API.Contracts;
 using RocketseatAuction.API.Filters;
+using RocketseatAuction.API.Repositories;
+using RocketseatAuction.API.Repositories.DataAccess;
 using RocketseatAuction.API.Services;
+using RocketseatAuction.API.UseCases.Auction.GetCurrent;
 using RocketseatAuction.API.UseCases.Offer.CreateOffer;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -45,6 +50,19 @@ builder.Services.AddControllers();
 builder.Services.AddScoped<AuthenticationUserAttribute>();
 builder.Services.AddScoped<LoggedUser>();
 builder.Services.AddScoped<CreateOfferUseCase>();
+builder.Services.AddScoped<GetCurrentAuctionUseCase>();
+
+// Quando alguém solicitar a interface IAuctionRepository, será instanciado a classe AuctionRepository
+builder.Services.AddScoped<IAuctionRepository, AuctionRepository>();
+builder.Services.AddScoped<IOfferRepository, OfferRepository>();
+builder.Services.AddScoped<IUserRepository, UserRepository>();
+builder.Services.AddScoped<ILoggedUser, LoggedUser>();
+
+// ID para o DbContext
+builder.Services.AddDbContext<RocketseatAuctionDbContext>(opts =>
+{
+    opts.UseSqlite("Data Source=D:\\MeusProjetos\\RocketseatAuction\\leilaoDbNLW.db");
+});
 
 builder.Services.AddHttpContextAccessor();
 
